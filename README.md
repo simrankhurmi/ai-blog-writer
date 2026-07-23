@@ -140,10 +140,40 @@ See [`.github/workflows/ci.yml`](.github/workflows/ci.yml).
 
 ## Deployment
 
-Deploy frontend and backend separately:
+This is a **monorepo** (`client/` + `server/`). Deploy each part separately.
 
-- **Client** → Vercel / Netlify (set `NEXT_PUBLIC_API_URL` to your API URL)
-- **Server** → Railway / Render / Fly.io (set env vars from `.env.example`)
+### Frontend — Vercel (recommended)
+
+The `404: NOT_FOUND` error usually means Vercel is building the **repo root** instead of the Next.js app.
+
+**Option A — Project settings (recommended)**
+
+1. Vercel → your project → **Settings** → **General**
+2. Set **Root Directory** to `client`
+3. **Framework Preset**: Next.js
+4. **Environment variables** → add:
+   - `NEXT_PUBLIC_API_URL` = `https://YOUR-API-URL/api`
+5. Redeploy from the **Deployments** tab
+
+**Option B — Root `vercel.json`**
+
+The repo includes a root [`vercel.json`](vercel.json) that points builds at `client/`. Push latest code and redeploy.
+
+### Backend — Railway / Render
+
+1. Create a new service from the same GitHub repo
+2. Set **Root Directory** to `server`
+3. Add environment variables from [`server/.env.example`](server/.env.example)
+4. Build: `npm run build` · Start: `npm start`
+5. Copy the public API URL (e.g. `https://your-app.up.railway.app`) into Vercel as `NEXT_PUBLIC_API_URL`
+
+### Checklist
+
+| Step | Frontend (Vercel) | Backend (Railway) |
+|------|-------------------|-------------------|
+| Root directory | `client` | `server` |
+| Env vars | `NEXT_PUBLIC_API_URL` | `GROQ_API_KEY`, `MONGO_URI`, etc. |
+| Health check | App loads at `/` | `GET /api/health` returns `200` |
 
 ## License
 
