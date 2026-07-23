@@ -1,0 +1,23 @@
+name: CD
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  verify:
+    name: Verify before deploy
+    uses: ./.github/workflows/ci.yml
+
+  # Add deployment steps when you connect a host.
+  # Example: Railway, Render, Vercel — set secrets in GitHub repo Settings → Secrets.
+  deploy-ready:
+    name: Deploy gate
+    needs: verify
+    runs-on: ubuntu-latest
+    steps:
+      - name: CI passed
+        run: |
+          echo "✅ CI passed on main."
+          echo "Deploy client to Vercel/Netlify and server to Railway/Render."
+          echo "Set environment variables from server/.env.example and client/.env.local.example"

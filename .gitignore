@@ -1,0 +1,43 @@
+# Dependencies
+node_modules/
+
+# Environment & secrets (NEVER commit)
+.env
+.env.*
+!.env.example
+!.env.local.example
+server/.env
+client/.env
+client/.env.local
+
+# Local data fallback
+server/data/*.json
+!server/data/.gitkeep
+
+# Build outputs
+client/.next/
+client/out/
+client/build/
+dist/
+*.tsbuildinfo
+
+# Logs & debug
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS & IDE
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Netlify / Vercel / misc
+.netlify/
+.vercel/
+
+# Test coverage
+coverage/
