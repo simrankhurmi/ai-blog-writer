@@ -144,36 +144,31 @@ This is a **monorepo** (`client/` + `server/`). Deploy each part separately.
 
 ### Frontend — Vercel (recommended)
 
-The `404: NOT_FOUND` error usually means Vercel is building the **repo root** instead of the Next.js app.
+1. Vercel → project → **Settings** → **General** → **Root Directory**: `client`
+2. **Environment variables** (Production):
+   - `API_URL` = `https://YOUR-BACKEND-URL` (no trailing slash — e.g. Render/Railway URL)
+3. Redeploy
 
-**Option A — Project settings (recommended)**
+The frontend proxies `/api/*` to your backend via `API_URL`, so you do **not** need `NEXT_PUBLIC_API_URL` on Vercel unless you want direct browser → backend calls.
 
-1. Vercel → your project → **Settings** → **General**
-2. Set **Root Directory** to `client`
-3. **Framework Preset**: Next.js
-4. **Environment variables** → add:
-   - `NEXT_PUBLIC_API_URL` = `https://YOUR-API-URL/api`
-5. Redeploy from the **Deployments** tab
+### Backend — Render (one-click) or Railway
 
-**Option B — Root `vercel.json`**
+**Render** (uses [`render.yaml`](render.yaml)):
 
-The repo includes a root [`vercel.json`](vercel.json) that points builds at `client/`. Push latest code and redeploy.
+1. [Render Dashboard](https://dashboard.render.com) → **New** → **Blueprint** → connect this repo
+2. Set secrets: `GROQ_API_KEY`, optional `MONGO_URI`
+3. Copy the service URL (e.g. `https://ai-blog-writer-api.onrender.com`)
+4. Paste into Vercel as `API_URL` and redeploy the frontend
 
-### Backend — Railway / Render
-
-1. Create a new service from the same GitHub repo
-2. Set **Root Directory** to `server`
-3. Add environment variables from [`server/.env.example`](server/.env.example)
-4. Build: `npm run build` · Start: `npm start`
-5. Copy the public API URL (e.g. `https://your-app.up.railway.app`) into Vercel as `NEXT_PUBLIC_API_URL`
+**Railway**: Root Directory `server`, same env vars, `npm run build` + `npm start`.
 
 ### Checklist
 
-| Step | Frontend (Vercel) | Backend (Railway) |
-|------|-------------------|-------------------|
+| Step | Frontend (Vercel) | Backend (Render/Railway) |
+|------|-------------------|--------------------------|
 | Root directory | `client` | `server` |
-| Env vars | `NEXT_PUBLIC_API_URL` | `GROQ_API_KEY`, `MONGO_URI`, etc. |
-| Health check | App loads at `/` | `GET /api/health` returns `200` |
+| Env vars | `API_URL` | `GROQ_API_KEY`, `MONGO_URI`, etc. |
+| Health check | App loads at `/` | `GET /api/health` → `200` |
 
 ## License
 

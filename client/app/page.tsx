@@ -46,7 +46,15 @@ export default function Home() {
         setStats(statsData);
         if (health) setStorageMode(health.storage);
       } catch {
-        setError("Could not connect to API. Run: cd server && npm run dev");
+        const isLocal =
+          typeof window !== "undefined" &&
+          (window.location.hostname === "localhost" ||
+            window.location.hostname === "127.0.0.1");
+        setError(
+          isLocal
+            ? "Could not connect to API. Run: cd server && npm run dev"
+            : "Could not reach the API backend. Deploy the server and set API_URL in Vercel environment variables, then redeploy."
+        );
       } finally {
         setIsLoading(false);
       }

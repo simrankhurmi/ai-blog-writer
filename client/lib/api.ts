@@ -1,4 +1,5 @@
 import axios from "axios";
+import { getApiBaseUrl } from "./api-config";
 import type {
   Blog,
   BlogStats,
@@ -9,7 +10,7 @@ import type {
   ImproveBlogRequest,
 } from "./types";
 
-const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
+const API = getApiBaseUrl();
 
 const client = axios.create({
   baseURL: API,
@@ -17,9 +18,7 @@ const client = axios.create({
 });
 
 export const getHealth = async (): Promise<HealthResponse> => {
-  const res = await axios.get<HealthResponse>(
-    API.replace("/api", "") + "/api/health"
-  );
+  const res = await client.get<HealthResponse>("/health");
   return res.data;
 };
 
